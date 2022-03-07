@@ -1,14 +1,16 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
-BASE_VAL = 6
 WIDTH = 9
 HEIGHT = 7
 # From the list of unicodes, replace “+” with “000”.
 # For example – “U+1F600” will become “\U0001F600”
 # and prefix the unicode with “\” and print it.
 # EMOJIS = ["\U0002B50", "\U0001F31F", "\U0002728" , "\U0001F4AB"] # star, glowing star, sparkles, dizzy
-EMOJIS = [" "," ","⭐","✨","💫","🐾","🐈","🐈‍⬛"]
+EMOJIS = [" "," "," ","⭐","✨","💫","🐾","🐈","🐈‍⬛"]
+BASE_VAL = len(EMOJIS) - 2
 import random
+import tweepy
+import config
 
 def main():
     vector0 = random.choices(range(BASE_VAL), k = WIDTH)
@@ -17,6 +19,9 @@ def main():
     lookup_table = gen_table(rule)
     # print(lookup_table)
     display_vectors(add_cats(ca_vector_gen(vector0, lookup_table)))
+
+def tweepy_setup():
+    print()
 
 # convert rule number in decimal to base BASE_VAL, thanks stackoverflow :)
 # https://stackoverflow.com/questions/2267362/how-to-convert-an-integer-to-a-string-in-any-base
@@ -65,9 +70,9 @@ def add_cats(vectors):
     for cat in range(random.choices([1, 2, 3, 4], weights = (70, 25, 10, 5), k = 1)[0]):
         cat_row = random.randrange(HEIGHT) #pick random row
         if BASE_VAL in vectors[cat_row]:
-            vectors[cat_row][vectors[cat_row].index(BASE_VAL)] = random.choice([6,7])
+            vectors[cat_row][vectors[cat_row].index(BASE_VAL)] = random.choice([len(EMOJIS)-1, len(EMOJIS)-2])
         else:
-            vectors[cat_row][random.randrange(WIDTH)] = random.choice([6,7])
+            vectors[cat_row][random.randrange(WIDTH)] = random.choice([len(EMOJIS)-1, len(EMOJIS)-2])
     return vectors
 
 def display_vectors(vectors_2d):
