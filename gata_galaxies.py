@@ -17,11 +17,13 @@ def main():
     # print(vector0)
     rule = random.randrange(BASE_VAL ** (BASE_VAL ** 3) - 1) # TO DO: base this off of something like the date/time?
     lookup_table = gen_table(rule)
-    # print(lookup_table)
-    display_vectors(add_cats(ca_vector_gen(vector0, lookup_table)))
+    send_tweepy(vectors_to_text(add_cats(ca_vector_gen(vector0, lookup_table))))
 
-def tweepy_setup():
-    print()
+def send_tweepy(emoji_text):
+    client = tweepy.Client(bearer_token=config.bearer_token, consumer_key=config.consumer_key,
+    consumer_secret=config.consumer_secret, access_token=config.access_token, access_token_secret=config.access_token_secret)
+
+    tweet = client.create_tweet(text=emoji_text)
 
 # convert rule number in decimal to base BASE_VAL, thanks stackoverflow :)
 # https://stackoverflow.com/questions/2267362/how-to-convert-an-integer-to-a-string-in-any-base
@@ -81,5 +83,13 @@ def display_vectors(vectors_2d):
         for number in vector:
             print(EMOJIS[number], end = "")
         print()
+
+def vectors_to_text(vectors_2d):
+    tweet_text = ""
+    for vector in vectors_2d:
+        for number in vector:
+            tweet_text += EMOJIS[number]
+        tweet_text += "\n"
+    return tweet_text[:-1]
 
 main()
